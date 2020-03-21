@@ -21,7 +21,10 @@ router.get('/master', function (req, res, next) {
     console.log('마스터 QR기기 reload 완료');
     client.get('nowAuthKey', function (err, reply) {
         if (err) {
-            client.set('oldAuthKey', randomString());
+            return client.set('oldAuthKey', randomString());
+        }
+        if (reply == null) {
+            return client.set('oldAuthKey', randomString());
         }
         client.set('oldAuthKey', reply);
     });
