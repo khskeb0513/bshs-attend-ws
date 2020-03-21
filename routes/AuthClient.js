@@ -35,13 +35,13 @@ router.post('/android', function (req, res) {
         sql.connect(config, err => {
             if (err) return res.json({success: false})
 
-            new sql.Request().query(queryStudentInRecord.returnString(), (err, result) => {
+            new sql.Request().query(queryStudentInRecord.returnString().replace( /`/gi, '\''), (err, result) => {
                 if (err) return res.json({success: false})
                 if (result.recordset.length == 0) {
                     sql.connect(config, err => {
                         if (err) return res.json({success: false})
 
-                        new sql.Request().query(insertStudentInRecord.returnString(), (err, result) => {
+                        new sql.Request().query(insertStudentInRecord.returnString().replace( /`/gi, '\''), (err, result) => {
                             if (err) return res.json({success: false})
                             return res.json({success: true})
                         })
