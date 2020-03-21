@@ -32,6 +32,7 @@ router.get('/master', function (req, res, next) {
     client.get('nowAuthKey', function (err, reply) {
         QRCode.toDataURL(reply, {errorCorrectionLevel: 'H', width: "120"}, function (err, qrcode) {
             if (err) throw err;
+            console.log("New AuthKey is: " + reply);
             res.render('AuthKeyMaster', {
                 qrcode: qrcode,
                 authKey: reply

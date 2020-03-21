@@ -3,6 +3,7 @@ const router = express.Router();
 const redis = require('redis');
 const sql = require('mssql');
 const moment = require('moment');
+const async = require('async');
 const qsb = require('node-qsb');
 
 require('moment-timezone');
@@ -19,52 +20,84 @@ var config = {
 
 router.post('/android', function (req, res) {
 
-    var queryStudentInRecord = new qsb().select('studentin')
-        .where('st_id', '=', req.body.st_id)
-        .where('inDate', '=', moment().format("YYYY-MM-DD"))
-        .build();
-    var insertStudentInRecordData = {
-        cols: ['inDate', 'inTime', 'st_id', 'class', 'gubun', 'bigo', 'state', 'STD_NAME'],
-        vals: [moment().format("YYYY-MM-DD"), moment().format("HHmmss"), req.body.st_id, req.body.classNum, '', '', 'Y', '체크기1'],
-    };
-    var insertStudentInRecord = new qsb().insert('studentin')
-        .values(insertStudentInRecordData.cols, insertStudentInRecordData.vals)
-        .build();
+        var st_id = req.body.st_id;
+        var classNum = req.body.classNum;
+        var sendauthKey = req.body.authKey;
 
-    if (req.body.authKey == oldAuthKey() || req.body.authKey == nowAuthKey()) {
-        sql.connect(config, err => {
-            if (err) return res.json({success: false})
-
-            new sql.Request().query(queryStudentInRecord.returnString().replace( /`/gi, '\''), (err, result) => {
-                if (err) return res.json({success: false})
-                if (result.recordset.length == 0) {
+        async.waterfall([
+            function (callback) {
+                client.get('oldAuthKey', function (err, reply) {
+                    callback(null, reply)
+                });
+            },
+            function (oldAuthKey, callback) {
+                client.get('nowAuthKey', function (err, reply) {
+                    callback(null, oldAuthKey, reply)
+                });
+            },
+            function (oldAuthKey, nowAuthKey) {
+                if (sendauthKey == oldAuthKey || sendauthKey == nowAuthKey) {
                     sql.connect(config, err => {
-                        if (err) return res.json({success: false})
+                        if (err) {
+                            console.log(err);
+                            return res.json({
+                                success: false
+                            })
+                        }
 
-                        new sql.Request().query(insertStudentInRecord.returnString().replace( /`/gi, '\''), (err, result) => {
-                            if (err) return res.json({success: false})
-                            return res.json({success: true})
+                        var rootqueryString = "select * from studentin where st_id='" + st_id + "' and inDate = '" + moment().format("YYYY-MM-DD") + "'";
+
+                        new sql.Request().query(rootqueryString, (err, result) => {
+                            if (err) {
+                                console.log(err);
+                                return res.json({
+                                    success: false
+                                })
+                            }
+                            if (result.recordset.length == 0) {
+                                sql.connect(config, err => {
+                                    if (err) {
+                                        console.log(err);
+                                        return res.json({
+                                            success: false
+                                        })
+                                    }
+
+                                    var queryString = "insert into studentin (inDate,inTime,st_id,class,gubun,bigo,state,STD_NAME) VALUES ('" + moment().format("YYYY-MM-DD") + "','" + moment().format("HHmmss") +
+                                        "','" + st_id + "','" + classNum + "','','','Y','체크기1')";
+                                    console.dir(queryString);
+
+                                    new sql.Request().query(queryString, (err, result) => {
+                                        if (err) {
+                                            console.log(err);
+                                            return res.json({
+                                                success: false
+                                            })
+                                        }
+                                        return res.json({
+                                            success: true,
+                                            requestTime: moment().format("YYYY-MM-DD h:mm:ss").toString()
+                                        })
+                                    })
+                                });
+                            } else {
+                                res.json({
+                                    success: "conflicted"
+                                })
+                            }
                         })
                     });
+
                 } else {
-                    return res.json({success: "conflicted"})
+                    console.log("authKey is not correct.");
+                    return res.json({
+                        success: false
+                    })
                 }
-            })
-        });
+            }
+        ], function (err) {
+            console.log(err)
+        })
     }
-
-});
-
-function oldAuthKey() {
-    client.get('oldAuthKey', function (err, reply) {
-        return reply
-    })
-}
-
-function nowAuthKey() {
-    client.get('nowAuthKey', function (err, reply) {
-        return reply
-    })
-}
-
+);
 module.exports = router;
