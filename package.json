@@ -1,0 +1,26 @@
+{
+  "name": "bshs-attend-ws",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.28",
+    "morgan": "~1.9.1",
+    "mssql": "^6.2.0",
+    "mysql": "^2.18.1",
+    "node-qsb": "0.0.4",
+    "qrcode": "^1.4.4",
+    "redis": "^3.0.2",
+    "serve-favicon": "^2.5.0",
+    "socket.io": "^2.3.0",
+    "ws": "^7.2.3"
+  }
+}

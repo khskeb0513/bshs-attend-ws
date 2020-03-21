@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SECURE QRCODE::MASTER</title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+</head>
+<body>
+
+<span>M</span><br>
+<img src="<%= qrcode %>" alt="보안 이미지 로딩 중."/>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+<script>
+
+    $(() => {
+        var socket = io();
+
+        socket.emit('master', 'reload')
+
+        setInterval(function () {
+            socket.emit('master', 'reload')
+            window.location = window.location
+        }, 600000)
+
+    });
+</script>
+</body>
+</html>

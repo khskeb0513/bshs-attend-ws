@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="socket.io.slim" level="application" />
+    <orderEntry type="library" name="jquery" level="application" />
+    <orderEntry type="library" name="@types/websocket" level="application" />
+    <orderEntry type="library" name="@types/socket.io" level="application" />
+    <orderEntry type="library" name="@types/async" level="application" />
+    <orderEntry type="library" name="@types/express" level="application" />
+    <orderEntry type="library" name="@types/express-async-wrap" level="application" />
+    <orderEntry type="library" name="@types/express-ejs-layouts" level="application" />
+    <orderEntry type="library" name="@types/mysql" level="application" />
+    <orderEntry type="library" name="@types/express-ws" level="application" />
+    <orderEntry type="library" name="@types/redis" level="application" />
+  </component>
+</module>
