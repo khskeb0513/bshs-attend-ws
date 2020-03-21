@@ -16,7 +16,7 @@
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.28",
     "morgan": "~1.9.1",
-    "mssql": "^6.2.0",
+    "mssql": "6.0.1",
     "mysql": "^2.18.1",
     "node-qsb": "0.0.4",
     "qrcode": "^1.4.4",
