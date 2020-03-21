@@ -30,7 +30,7 @@ router.get('/master', function (req, res, next) {
     });
     client.set('nowAuthKey', randomString());
     client.get('nowAuthKey', function (err, reply) {
-        QRCode.toDataURL(reply, {errorCorrectionLevel: 'H', width: "160"}, function (err, qrcode) {
+        QRCode.toDataURL(reply, {errorCorrectionLevel: 'H', width: "120"}, function (err, qrcode) {
             if (err) throw err;
             res.render('AuthKeyMaster', {
                 qrcode: qrcode,
@@ -45,7 +45,7 @@ router.get('/slave', function (req, res, next) {
 
     console.log('슬레이브 QR기기 reload 완료');
     client.get('nowAuthKey', function (err, reply) {
-        QRCode.toDataURL(reply, {errorCorrectionLevel: 'H', width: "160"}, function (err, qrcode) {
+        QRCode.toDataURL(reply, {errorCorrectionLevel: 'H', width: "120"}, function (err, qrcode) {
             if (err) throw err;
             res.render('AuthKeySlave', {
                 qrcode: qrcode,
