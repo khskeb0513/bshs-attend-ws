@@ -2,7 +2,8 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   overflow-x: hidden;
   overflow-y: hidden;
-  -webkit-app-region: drag
+  -webkit-app-region: drag;
+  background: #FFFFFF;
 }
 
 a {
