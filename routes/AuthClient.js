@@ -24,6 +24,8 @@ router.post('/android', function (req, res) {
         var classNum = req.body.classNum;
         var sendauthKey = req.body.authKey;
 
+        console.log(req.body)
+
         async.waterfall([
             function (callback) {
                 client.get('oldAuthKey', function (err, reply) {
