@@ -8,7 +8,6 @@ var app = express();
 
 var authKeyRouter = require('./routes/AuthKey');
 var authClientRouter = require('./routes/AuthClient');
-var usersRouter = require('./routes/users');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -22,7 +21,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/auth', authKeyRouter);
 app.use('/client', authClientRouter);
-app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -31,37 +29,45 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-    // render the error page
     res.status(err.status || 500);
-    res.render('error');
+    if (err.status === 404) {
+        res.render('error', {
+            code: err.status,
+            message: "찾을 수 없음.",
+            // stacktrace: err
+            stacktrace: null
+        });
+    } else {
+        res.render('error', {
+            code: err.status || 500,
+            message: "내부 오류.",
+            // stacktrace: err
+            stacktrace: null
+        });
+    }
 });
 
 app.io = require('socket.io')();
 
-app.io.on('connection', function(socket){
+app.io.on('connection', function (socket) {
 
-  console.log("QR기기 연결됨.");
+    console.log("QR기기 연결됨.");
 
-  socket.on('disconnect', function(){
-    console.log('QR기기 연결종료됨.');
-  });
+    socket.on('disconnect', function () {
+        console.log('QR기기 연결종료됨.');
+    });
 
-  socket.on('master', function(msg){
-      if (msg == 'reload') {
-          console.log('마스터 QR기기 reload');
-          socket.broadcast.emit('slave','reload');
-          console.log('슬레이브 QR기기 reload 요청');
-      }
-  });
-
-  function alertReload() {
-      socket.broadcast.emit('slave','reload');
-      console.log('슬레이브 QR기기 reload 요청');
-  }
+    socket.on('authkey_status', function (msg) {
+        if (msg === 'master client request reloading slave client') {
+            console.log('마스터 QR기기 reload');
+            socket.broadcast.emit('authkey_status', 'server request reloading slave client reasoned by master requested');
+            console.log('슬레이브 QR기기 reload 요청');
+        } else if (msg === 'request reloading master client manually by admin') {
+            console.log('수동 마스터 QR기기 reload');
+            socket.broadcast.emit('authkey_status', 'server request reloading master client manually');
+            console.log('마스터 QR기기 reload 요청');
+        }
+    });
 
 });
 

@@ -19,6 +19,7 @@ const config = {
 
 const pool = new sql.ConnectionPool(config);
 
+// noinspection JSUnresolvedFunction
 router.post('/android', function (req, res) {
 
         const st_id = req.body.st_id;
@@ -38,7 +39,7 @@ router.post('/android', function (req, res) {
                 });
             },
             function (AuthKeyData, done) {
-                if (sendauthKey == AuthKeyData.oldAuthKey || sendauthKey == AuthKeyData.nowAuthKey) {
+                if (sendauthKey === AuthKeyData.oldAuthKey || sendauthKey === AuthKeyData.nowAuthKey) {
                     return done(null)
                 }
                 return done("wrong_authkey", null)
@@ -52,7 +53,7 @@ router.post('/android', function (req, res) {
                         if (err) return done(err, null);
                         ps.execute({st_id: st_id, inDate: inDate}, (err, result) => {
                             if (err) return done(err, null);
-                            if (result.rowsAffected[0] == 0) {
+                            if (result['rowsAffected'][0] === 0) {
                                 return done(null)
                             } else {
                                 return done("conflicted", result);
@@ -61,10 +62,6 @@ router.post('/android', function (req, res) {
                     })
                 })
             },
-            // function (AuthKeyData, done) {
-            //     pool.close();
-            //     done(null, AuthKeyData)
-            // },
             function (done) {
                 const inTime = moment().format("HHmmss");
                 pool.connect(err => {
@@ -100,11 +97,11 @@ router.post('/android', function (req, res) {
         ], function (err, result) {
             const personalInformation = " " + inDate + " " + classNum + "학년 " + st_id;
             if (err) {
-                if (err == "conflicted") {
+                if (err.toString() === "conflicted") {
                     console.error("conflicted" + personalInformation);
                     console.error(result.recordset[0]);
                     return res.json({success: "conflicted"});
-                } else if (err == "wrong_authkey") {
+                } else if (err.toString() === "wrong_authkey") {
                     console.error("wrong_authkey" + personalInformation);
                     return res.json({success: false});
                 } else {
@@ -113,7 +110,7 @@ router.post('/android', function (req, res) {
                     return res.json({success: false})
                 }
             }
-            console.log("attend" + personalInformation)
+            console.log("attend" + personalInformation);
             return res.json({
                 success: true,
                 requestTime: moment().format("YYYY-MM-DD h:mm:ss").toString()

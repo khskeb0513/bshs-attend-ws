@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SECURE QRCODE::RESET MASTER DEVICE</title>
+    <style>
+        body {
+            text-align: center;
+        }
+
+        .board {
+            text-align: left;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin: 10px;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<h3>《 마스터 기기 수동 reload 요청 버튼 》</h3>
+<h5>버튼을 누를 시, 즉시 마스터 기기에 reload 요청이 하달됩니다. 마스터 기기의 reload가 완료되면, 슬레이브 기기에 reload 요청이 하달됩니다.</h5>
+<hr>
+<button id="reload_btn" onclick="requestReload()">RELOAD</button>
+<h6 id="reload_able_text" style="color:green;">사용 가능</h6>
+<h6 id="reload_text" style="visibility: hidden; color:red;">reload 후 10초 경과 후 재시도 가능합니다. (시스템 안정성 보존을 위한 조치입니다.)</h6>
+<hr>
+<h3>《 상황판 》</h3>
+<div id="websocket_status" class="board">
+
+</div>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+<script>
+    const socket = io();
+    const reload_btn = document.getElementById('reload_btn');
+    const reload_text = document.getElementById('reload_text');
+    const reload_able_text = document.getElementById('reload_able_text');
+    const websocket_status = $('#websocket_status')
+
+    socket.on('authkey_status', (msg) => {
+        const appendTag = $('<h6>'+ msg +'</h6>');
+        websocket_status.append(appendTag);
+    });
+
+    function requestReload() {
+        socket.emit('authkey_status', 'request reloading master client manually by admin')
+        reload_btn.disabled = true;
+        reload_able_text.style.visibility = "hidden";
+        reload_text.style.visibility = "visible";
+        count10()
+    }
+
+    function count10() {
+        setTimeout(() => {
+            reload_btn.disabled = false;
+            reload_able_text.style.visibility = "visible";
+            reload_text.style.visibility = "hidden";
+            const appendTag = $('<h6>'+ '10sec passed.' +'</h6>');
+            websocket_status.append(appendTag);
+        }, 10000)
+    }
+</script>
+</body>
+</html>

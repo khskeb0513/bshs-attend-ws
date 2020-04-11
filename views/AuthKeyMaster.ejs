@@ -9,7 +9,8 @@
     <link rel='stylesheet' href='/stylesheets/style.css'/>
 </head>
 <body>
-<p><mark><img src="<%= qrcode %>" alt="보안 이미지 로딩 중."/></mark></p>
+<p><mark><img src="<%= // noinspection JSUnresolvedVariable
+        qrcode %>" alt="보안 이미지 로딩 중."/></mark></p>
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
@@ -17,11 +18,15 @@
 
     $(() => {
         var socket = io();
-
-        socket.emit('master', 'reload')
+        socket.emit('authkey_status', 'master client request reloading slave client')
+        socket.on('authkey_status', (msg) => {
+            if (msg === 'server request reloading master client manually') {
+                window.location = window.location
+            }
+        });
 
         setInterval(function () {
-            socket.emit('master', 'reload')
+            socket.emit('authkey_status', 'master client request reloading slave client')
             window.location = window.location
         }, 120000)
 

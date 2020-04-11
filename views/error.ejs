@@ -1,1 +1,22 @@
-<% if (message=="Not Found") { return "<h6>404<br>찾을 수 없음.</h6>" } else { return "<h6>503<br>내부오류.</h6>" } %>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Error_Document</title>
+    <style>
+        h6 {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<h6><%= code %></h6>
+<h6><%= message %></h6>
+<h6><%= stacktrace %></h6>
+
+</body>
+</html>

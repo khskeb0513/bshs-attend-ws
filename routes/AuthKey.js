@@ -14,6 +14,7 @@ var client = redis.createClient(6379, '127.0.0.1');
 //     res.render('index', {title: 'Express'});
 // });
 
+// noinspection JSUnresolvedFunction
 router.get('/master', function (req, res, next) {
 
     console.log("마스터 QR기기 reload 감지됨.");
@@ -56,6 +57,13 @@ router.get('/slave', function (req, res, next) {
     });
 
 });
+
+router.get('/renew', function (req, res, next) {
+
+    console.log('수동 마스터 QR기기 reload');
+    res.render('AuthKeyRenew')
+});
+
 
 function randomString() {
     var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz!@#$%^&*()";

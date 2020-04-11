@@ -15,5 +15,6 @@
     <orderEntry type="library" name="@types/mysql" level="application" />
     <orderEntry type="library" name="@types/express-ws" level="application" />
     <orderEntry type="library" name="@types/redis" level="application" />
+    <orderEntry type="library" name="@types/easy-jsend" level="application" />
   </component>
 </module>
