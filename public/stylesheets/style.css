@@ -3,9 +3,16 @@ body {
   overflow-x: hidden;
   overflow-y: hidden;
   -webkit-app-region: drag;
-  background: #FFFFFF;
+  background: #000000;
+  margin: 0;
+  padding: 0;
 }
 
 a {
   color: #00B7FF;
+}
+
+p {
+  margin: 0;
+  padding: 0;
 }
