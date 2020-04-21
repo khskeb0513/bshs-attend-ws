@@ -40,7 +40,7 @@
     const websocket_status = $('#websocket_status')
 
     socket.on('authkey_status', (msg) => {
-        const appendTag = $('<h6>'+ msg +'</h6>');
+        const appendTag = $('<h6>' + msg + '</h6>');
         websocket_status.append(appendTag);
     });
 
@@ -57,7 +57,7 @@
             reload_btn.disabled = false;
             reload_able_text.style.visibility = "visible";
             reload_text.style.visibility = "hidden";
-            const appendTag = $('<h6>'+ '10sec passed.' +'</h6>');
+            const appendTag = $('<h6>' + '10sec passed.' + '</h6>');
             websocket_status.append(appendTag);
         }, 10000)
     }

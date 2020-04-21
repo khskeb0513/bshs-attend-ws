@@ -54,11 +54,14 @@ router.post('/android', function (req, res) {
                         if (err) return done(err, null);
                         ps.execute({st_id: st_id, inDate: inDate}, (err, result) => {
                             if (err) return done(err, null);
-                            if (result['rowsAffected'][0] === 0) {
-                                return done(null)
-                            } else {
-                                return done("conflicted", result);
-                            }
+                            ps.unprepare((err) => {
+                                pool.close()
+                                if (result['rowsAffected'][0] === 0) {
+                                    done(null)
+                                } else {
+                                    done("conflicted", result);
+                                }
+                            })
                         })
                     })
                 })
@@ -90,7 +93,11 @@ router.post('/android', function (req, res) {
                                 STD_NAME: "체크기1"
                             }, (err, result) => {
                                 if (err) return done(err, result);
-                                return done(null, result)
+                                ps.unprepare((err) => {
+                                    if (err) return done(err, null);
+                                    pool.close()
+                                    done(null, result)
+                                })
                             })
                     })
                 })
