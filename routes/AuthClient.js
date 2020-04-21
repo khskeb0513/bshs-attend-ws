@@ -14,7 +14,8 @@ const config = {
     password: "unicool",
     server: "0.tcp.jp.ngrok.io",
     port: 10632,
-    database: "busan_h"
+    database: "busan_h",
+    options: { "enableArithAbort": true }
 };
 
 const pool = new sql.ConnectionPool(config);
